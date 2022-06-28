@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3"></script> 
+    <title>Mi app</title>
+
+    <style>
+        body {
+            font-family: 'Oxygen', sans-serif;
+        }
+    </style>
+</head>
+<br>
+<body class="h-screen bg-gray-100" >
+
+    <section id="app" class="md:h-full flex items-center text-gray-600">
+        <div class="container px-5 py-24 mx-auto">
+        
+            <div class="text-center mb-12">
+                <!-- Titulo -->
+                <h1 class="text-4xl md:text-6xl text-gray-700 font-semibold">Mi Facebook app</h1>
+            </div>
+            
+            <!-- Margen de la caja con respecto al DOM -->
+            
+            <div class="flex flex-wrap -m-4" >
+                <!-- Tamaño de la caja -->
+                <div class="p-4 sm:w-1/2 lg:w-1/4" >
+                    <!-- Borde sombra gris -->
+                    <div class="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden" v-if="resultado">
+
+                        <div class="result"  >
+                           
+                            <!-- Imagen del perfil -->
+                           <img v-bind:src="resultado.picture.data.url" class="object-contain h-48 w-96 ..." alt=""> 
+
+                            <!-- Para pintar de color lindo -->
+                            <div class="p-6 hover:bg-indigo-700 hover:text-white transition duration-300 ease-in">
+                            
+                                <h1 class="text-2xl font-semibold mb-3">{{resultado.name}} </h1>
+                             
+
+                                <!-- Con el flex-wrap centramos los siguientes link y span -->
+                                <div class="flex items-center flex-wrap ">
+                                    <a v-if="esFavorito" href="" class ="result__toggle-favorite" @click.prevent="RemoverFavorito"> <img src="Eliminar.png" width="30" height="30"> Eliminar </a>
+                                    <a v-else href="http://" class ="result__toggle-favorite" @click.prevent="addFavorito"><img src="favoritos.png" width="30" height="30"> Favoritos </a>
+                                    
+                                    <!-- Link para ingresar al perfil -->
+                                    <a v-if="resultado.link" v-bind:href="resultado.link" class="text-indigo-300 inline-flex items-center md:mb-2 lg:mb-0" target="blank">Entrar al perfil</a>
+                                    
+                                    <!-- Número de seguidores -->
+                                    <!-- Centrar los span para q no este uno sobre otro -->
+                                    <span class="text-gray-400 mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
+                                        <svg class="w-4 h-4 mr-1" stroke="currentColor" stroke-width="2" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                            <!-- Cículo externo del ojo -->
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <!-- Círculo interno del ojo -->
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg> 
+                                    </span>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                        <!-- Error -->
+                    <div v-show="fail" v-else class="text-2xl font-semibold mb-3">{{fail}}</div><!-- nos arroja el error del fail q pusimos en main -->
+                </div>
+               
+                <div class="p-4 sm:w-1/2 lg:w-1/2">
+                    <div class="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
+                        <!-- Padin de la letra -->
+                        <div class="p-6 ">
+                            
+                            <h1 class="text-2xl font-semibold mb-3">Inserte el Id del usuario: </h1>
+                            <!-- Apartado Busqueda -->
+                            <form class="mb-4" v-on:submit.prevent="Buscar">
+                                <div class="mb-4">
+                                    <!-- Cuadro de busqueda -->
+                                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" v-model="busqueda" id="id" type="text" placeholder=" ">
+                                </div>                  
+                                <div class="flex items-center justify-between">
+                                    <!-- Boton para buscar -->
+                                    <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Buscar">
+                                    
+                                    <a href="https://es.wikihow.com/averiguar-el-ID-de-un-usuario-en-Facebook" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" >
+                                      Cómo saber el id?
+                                    </a>
+                                </div>
+                            </form>
+                       
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="w-64" aria-label="Sidebar">
+                    <div class="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800">
+                        <ul class="space-y-2">
+                         
+                            <li>
+                                <a href="#" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                    <span class="flex-1 ml-3 whitespace-nowrap">Favoritos</span>
+                                </a>
+                            </li>
+                            <li>
+                                 <!-- Favorites -->
+                                <div class="favorites">
+                                    <div class="favorite" v-for="alias in TodosFavoritos">
+                                        <a  @click.prevent="MostrarFavorito(alias)" href="">  <!-- Le mandamos el alias de todos favoritos para q vea los valores -->
+                                            <img v-bind:src="alias.picture.data.url" alt=" " class="favorite__avatar">
+                                            <!-- <p>{{alias.name}}</p> -->
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>            
+        </div>
+    </section>
+   
+    <script src="main.js"></script>
+        <!-- Experimento para ver la reactividad  -->
+    
+    <script>
+            const AppMontada = ella.mount('#app')  /*aqui mandamos el app del html */
+    </script>     
+</body>
+<footer>
+    <div>       
+        <p class="text-center text-gray-500 text-xs">
+            2022 - Derechos Reservados.
+        </p>
+    </div>
+</footer>
+</html>

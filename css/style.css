@@ -1,0 +1,23 @@
+*,
+*::after,
+*::before {
+    box-sizing: border-box;   /*para que los padding y las margenes no cambien el tamaño de las  cajas*/
+}
+
+body {
+    font-family: Roboto; /*Tipo de letra q descargamos*/
+
+}
+/* demo shizzle only */
+body {
+  background: #eee;
+  max-width: 700px;
+  margin: 10px auto;
+  padding: 20px;
+/*   outline: 1px solid #ccc; */
+}
+
+/* Still use global css (not utility css) for base typography etc? */
+p {
+  margin-bottom: 0.8em;
+}
